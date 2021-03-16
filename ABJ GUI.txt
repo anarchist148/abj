@@ -1,0 +1,761 @@
+game:GetService("StarterGui"):SetCore("SendNotification", {
+				Title = "Click F9 For Cmds";
+				Text  = "Welcome, "..game.Players.LocalPlayer.Name;
+			})
+			print("note: The !admin cmd is still quite buggy. If any issues occur use the !rejoin command") -- blacklist:
+local blacklist = false
+local BlackList = {'random_nigga1', 'random_nigga2'}
+for i,v in pairs(BlackList) do 
+if v == game.Players.LocalPlayer.Name then 
+   blacklisted = true
+end
+end
+if not blacklisted then 
+----------------------------
+-- variables:
+local LocalPlayer =  game.Players.LocalPlayer
+local admin = {prefix = '!', version = '1.0'}
+local commands = {}
+local descriptions = {}
+
+-- functions:
+function addcommand(cmdName, cmdDescription, cmdFunction)
+commands[cmdName] = cmdName;
+descriptions[cmdName] = cmdDescription
+LocalPlayer.Chatted:Connect(function(msg)
+msg = msg:lower()
+args = msg:split(" ")
+if args[1] == admin.prefix..cmdName then 
+cmdFunction()
+elseif args[1] == "/e" and args[2] == admin.prefix..cmdName then 
+args[2] = args[3] 
+cmdFunction()
+end
+end)
+end
+
+function newHumanoid()
+Instance.new('Humanoid', LocalPlayer.Character)
+end
+
+function GetPlayer(target)
+local plrs = game:service("Players"):GetPlayers()
+if target:lower() == "all" then
+return plrs
+elseif target:lower() == "others" then
+for index, plr in pairs(plrs) do
+if plr == game:service("Players").LocalPlayer then
+table.remove(plrs, index)
+return plrs
+end
+end
+elseif target:lower() == "me" then
+return {game:service("Players").LocalPlayer}
+else
+local plrTargets = {}
+for index, plr in pairs(plrs) do
+if plr.Name:sub(1, #target):lower() == target:lower() then
+table.insert(plrTargets, plr)
+end
+end
+return plrTargets
+end
+end
+--// commands
+addcommand("invis", "Will make player invisible", function()
+for _Index, Target in pairs(GetPlayer(args[2])) do 
+for i, v in pairs(Target.Character:getDescendants()) do
+game.ReplicatedStorage.Transparency:FireServer(v, 1)
+if v.Name == "Stand" then
+    for _, p in pairs(v:GetChildren()) do
+        game.ReplicatedStorage.Transparency:FireServer(p, 1)
+
+end
+end
+end
+end
+end)
+
+addcommand("vis", "Will make player uninvisible", function()
+for _Index, Target in pairs(GetPlayer(args[2])) do 
+for i, v in pairs(Target.Character:getDescendants()) do
+game.ReplicatedStorage.Transparency:FireServer(v, 0)
+game.ReplicatedStorage.Transparency:FireServer(Target.Character.HumanoidRootPart, 1)
+if v.Name == "Stand" then
+    for _, p in pairs(v:GetChildren()) do
+        game.ReplicatedStorage.Transparency:FireServer(p, 0.1)
+
+end
+end
+end
+end
+end)
+
+addcommand("ghostify", "Will make player uninvisible", function()
+for _Index, Target in pairs(GetPlayer(args[2])) do 
+for i, v in pairs(Target.Character:getDescendants()) do
+game.ReplicatedStorage.Transparency:FireServer(v, 0.5)
+if v.Name == "Stand" then
+    for _, p in pairs(v:GetChildren()) do
+        game.ReplicatedStorage.Transparency:FireServer(p, 0.5)
+
+end
+end
+end
+end
+end)
+
+
+addcommand("kill", "kills player", function()
+for _Index, Target in pairs(GetPlayer(args[2])) do 
+for i, v in pairs(game.Players:GetChildren()) do
+			local args = {
+				[1] = Target.Character.Humanoid,
+				[2] = CFrame.new(-31.8360825, 200.797592, 100.447334, -0.811959743, -0.323546797, 0.485838592, -0.382440954, -0.333919734, -0.861531556, 0.440976888, -0.885333359, 0.147391781),
+				[3] = -math.huge,
+				[4] = 0.25,
+				[5] = Vector3.new(-0.473926514, -2.59954675e-07, 2.45466781),
+				[6] = 0.075,
+				[7] = "rbxassetid://137579113",
+				[8] = 2.2,
+				[9] = 0.18,
+			}
+
+			game:GetService("ReplicatedStorage")["Heal6"]:FireServer(unpack(args))
+    end
+end
+end)
+
+addcommand("heal", "heals player", function()
+for _Index, Target in pairs(GetPlayer(args[2])) do 
+for i, v in pairs(game.Players:GetChildren()) do
+			local args = {
+				[1] = Target.Character.Humanoid,
+				[2] = CFrame.new(-31.8360825, 200.797592, 100.447334, -0.811959743, -0.323546797, 0.485838592, -0.382440954, -0.333919734, -0.861531556, 0.440976888, -0.885333359, 0.147391781),
+				[3] = math.huge,
+				[4] = 0.25,
+				[5] = Vector3.new(-0.473926514, -2.59954675e-07, 2.45466781),
+				[6] = 0.075,
+				[7] = "rbxassetid://137579113",
+				[8] = 2.2,
+				[9] = 0.18,
+			}
+
+			game:GetService("ReplicatedStorage")["Heal6"]:FireServer(unpack(args))
+    end
+end
+end)
+
+game.Players.LocalPlayer.Chatted:Connect(function(msg)
+if msg == ("!god me") then
+game:GetService("ReplicatedStorage").Stand:FireServer("GoldExperienceRequiemStand", math.huge, math.huge)
+end
+end)
+addcommand("goto", "Teleports to player", function()
+for _Index, Target in pairs(GetPlayer(args[2])) do
+    game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = Target.Character.HumanoidRootPart.CFrame
+end
+end)
+
+
+addcommand("fling", "flings plr", function()
+for _Index, Target in pairs(GetPlayer(args[2])) do
+local A_1 = Target.Character.Humanoid
+local A_2 = 0
+local A_3 = 0.05
+local A_4 = Vector3.new(math.random(200, 600), math.random(200, 300), math.random(200, 600))
+game:GetService("ReplicatedStorage").Damage13:FireServer(A_1, A_2, A_3, A_4)
+end
+end)
+
+addcommand("void", "voids plr", function()
+for _Index, Target in pairs(GetPlayer(args[2])) do
+local A_1 = Target.Character.Humanoid
+local A_2 = 0
+local A_3 = math.huge
+local A_4 = Vector3.new(math.huge, math.huge, math.huge)
+game:GetService("ReplicatedStorage").Damage13:FireServer(A_1, A_2, A_3, A_4)
+end
+end)
+
+
+addcommand("explode", "Explodes player", function()
+for _Index, Target in pairs(GetPlayer(args[2])) do
+function getNil(name,class) for _,v in pairs(getnilinstances())do if v.ClassName==class and v.Name==name then return v;end end end
+local pos = Target.Character.HumanoidRootPart.Position
+local args = {
+    [1] = CFrame.new(pos),
+}
+game:GetService("ReplicatedStorage").MeguminExplosion:FireServer(unpack(args))
+end
+end)
+
+addcommand("superexplode", "Super Explodes player", function()
+for _Index, Target in pairs(GetPlayer(args[2])) do
+function getNil(name,class) for _,v in pairs(getnilinstances())do if v.ClassName==class and v.Name==name then return v;end end end
+local pos = Target.Character.HumanoidRootPart.Position
+local args = {
+    [1] = CFrame.new(pos),
+}
+game:GetService("ReplicatedStorage").MeguminExplosionLarge:FireServer(unpack(args))
+end
+end)
+
+
+addcommand("freeze", "freezes plr", function()
+for _Index, Target in pairs(GetPlayer(args[2])) do
+local args = {
+    [1] = Target.Character.HumanoidRootPart,
+    [2] = true,
+}
+game:GetService("ReplicatedStorage").Anchor:FireServer(unpack(args))
+end
+end)
+
+addcommand("unfreeze", "unfreezes plr", function()
+for _Index, Target in pairs(GetPlayer(args[2])) do
+local args = {
+    [1] = Target.Character.HumanoidRootPart,
+    [2] = false,
+}
+game:GetService("ReplicatedStorage").Anchor:FireServer(unpack(args))
+end
+end)
+
+
+
+notify = true
+
+addcommand("admin", "gives plr admin", function()
+for _Index, Target in pairs(GetPlayer(args[2])) do
+admincheck = true
+wait(.1)
+if notify == true then
+local A_1 = Target.Name.." Has Been Whitelisted!"
+		local A_2 = "All"
+		local Event = game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest
+		Event:FireServer(A_1, A_2)
+		end
+Target.Chatted:Connect(function(msg)
+if admincheck == true then
+if msg:sub(1, 5) == ("!kill") or msg:sub(1, 5) == ("!heal") or msg:sub(1, 6) == ("!invis") or msg:sub(1, 4) == ("!vis") or msg:sub(1, 9) == ("!ghostify") or msg:sub(1, 10) == ("!explosion") or msg:sub(1, 7) == ("!freeze") or msg:sub(1, 9) == ("!unfreeze") or msg:sub(1, 8) == ("!explode")
+or msg:sub(1, 13) == ("!superexplode") or msg:sub(1, 6) == ("!fling") or msg:sub(1, 5) == ("!void") then
+local args = msg:split(" ")
+if args[2] == "others" then
+for i, v in pairs(game.Players:GetChildren()) do
+	if v.Name == Target.Name then
+		local fire = 1
+	else
+		game.Players:Chat(args[1].." "..v.Name)
+	end
+end
+	else if args[2] == "me" then
+			game.Players:Chat(args[1].." "..Target.Name)
+	else
+		game.Players:Chat(msg)
+end		
+end
+end
+end
+end)
+end
+end)
+local plr = game.Players.LocalPlayer
+plr.Chatted:Connect(function(msg)
+if msg == ("!unadmin") then
+admincheck = false
+end
+end)
+
+local plr = game.Players.LocalPlayer
+plr.Chatted:Connect(function(msg)
+if msg == ("!notify") then
+notify = true
+end
+end)
+print("!unnotify - removes notification when giving player admin")
+print("!notify - undoes !unnotify")
+print("!plrcmds - shows cmds that whitelisted players can use")
+
+local plr = game.Players.LocalPlayer
+plr.Chatted:Connect(function(msg)
+if msg == ("!unnotify") then
+notify = false
+end
+end)
+
+local plr = game.Players.LocalPlayer
+plr.Chatted:Connect(function(msg)
+if msg == ("!plrcmds") then
+wait(.1)
+local A_1 = "!kill plr, !heal plr, explode plr, !freeze - !unfreeze plr, !invis - !vis plr, !fling plr, !void plr, !ghostify plr, !superexplode plr"
+		local A_2 = "All"
+		local Event = game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest
+		Event:FireServer(A_1, A_2)
+end
+end)
+print("!rejoin - rejoins the game")
+game.Players.LocalPlayer.Chatted:Connect(function(msg)
+if msg == ("!rejoin") then
+local tp = game:GetService("TeleportService")
+	local plr = game:GetService("Players").LocalPlayer
+	local Id = game.PlaceId
+	tp:Teleport(Id, p)
+end
+end)
+
+game.Players.LocalPlayer.Chatted:Connect(function(msg)
+if msg:sub(1, 6) == ("!loop ") then
+loop = true
+while loop == true do
+wait(.1)
+game.Players:Chat(msg:sub(7, #msg))
+end
+end
+end)
+
+game.Players.LocalPlayer.Chatted:Connect(function(msg)
+if msg:sub(1, 7) == ("!unloop") then
+loop = false
+end
+end)
+print("!loop command - loops command")
+print("!unloop - unloops all looped messages")
+
+print("!cmds - shows list of cmds in Dev Console")
+game.Players.LocalPlayer.Chatted:Connect(function(msg)
+if msg == ("!cmds") then
+for i,v in pairs(commands) do 
+print(v..' | '..descriptions[v])
+print("!unnotify - removes notification when giving player admin")
+print("!notify - undoes !unnotify")
+print("!plrcmds - shows cmds that whitelisted players can use")
+print("!rejoin - rejoins the game")
+print("!cmds - shows list of cmds in Dev Console")
+print("!loop command - loops command")
+print("!unloop - unloops all looped messages")
+end
+end
+end)
+
+for i,v in pairs(commands) do 
+print(v..' | '..descriptions[v])
+end
+end
+--Made by : https://v3rmillion.net/member.php?action=profile&uid=507120
+--Go vouch release thread : https://v3rmillion.net/showthread.php?tid=1040650
+
+local library = loadstring(game:HttpGet(('https://raw.githubusercontent.com/bloodball/-back-ups-for-libs/main/wall%20v3')))()
+
+local a = library:CreateWindow("ABJ Gui") -- Creates the folder(U will put here your buttons,etc)
+
+local b = a:CreateFolder("Troll")
+local c = a:CreateFolder("Player Commands")
+local ex = a:CreateFolder("Extras")
+ex:Label("Scripts made by Yeagar#1111",{
+    TextSize = 17; -- Self Explaining
+    TextColor = Color3.fromRGB(200,200,200); -- Self Explaining
+    BgColor = Color3.fromRGB(40,40,40); -- Self Explaining
+    
+}) 
+
+ex:DestroyGui()
+b:Button("Kill all",function()
+game.Players:Chat("!kill all")
+end)
+b:Button("invisible all",function()
+game.Players:Chat("!invis all")
+end)
+b:Button("heal all",function()
+game.Players:Chat("!heal all")
+end)
+b:Button("freeze all",function()
+game.Players:Chat("!freeze all")
+end)
+b:Button("ghostify all",function()
+game.Players:Chat("!ghostify all")
+end)
+b:Button("fling all",function()
+game.Players:Chat("!fling all")
+end)
+b:Button("void all",function()
+game.Players:Chat("!void all")
+end)
+b:Button("explode all",function()
+game.Players:Chat("!explode all")
+end)
+b:Button("superexplode all",function()
+game.Players:Chat("!superexplode all")
+end)
+
+c:Button("God Mode",function()
+    game:GetService("ReplicatedStorage").Stand:FireServer("GoldExperienceRequiemStand", math.huge, math.huge)
+end)
+
+c:Button("Doom Slayer",function()
+    function getNil(name,class) for _,v in pairs(getnilinstances())do if v.ClassName==class and v.Name==name then return v;end end end
+
+	game:GetService("ReplicatedStorage").DoomSlayer:FireServer()
+end)
+
+c:Button("Imposter Outfit",function()
+   function getNil(name,class) for _,v in pairs(getnilinstances())do if v.ClassName==class and v.Name==name then return v;end end end
+
+	game:GetService("ReplicatedStorage").imposter:FireServer()
+	game.Players.LocalPlayer.Character["Right Arm"]:destroy()
+	game.Players.LocalPlayer.Character["Left Arm"]:destroy()
+end)
+
+ex:Button("Rejoin",function()
+    local tp = game:GetService("TeleportService")
+		local plr = game:GetService("Players").LocalPlayer
+		local Id = game.PlaceId
+		tp:Teleport(Id, p)
+end)
+
+c:Button("Crash Server",function()
+   if game.Players.LocalPlayer.Backpack:FindFirstChild("PipBoy") then
+while wait() do
+for i, v in pairs(game.Players:getChildren()) do
+function getNil(name,class) for _,v in pairs(getnilinstances())do if v.ClassName==class and v.Name==name then return v;end end end
+
+local args = {
+    [1] = "Basic",
+    [2] = CFrame.new(v.Character.Head.Position),
+}
+
+game:GetService("ReplicatedStorage").PipboyRapidFire:FireServer(unpack(args))
+end
+end
+else
+game:GetService("StarterGui"):SetCore("SendNotification", {
+			Title = "Invalid!";
+			Text  = "You need to have rocket launcher!";
+		})
+end
+end)
+
+
+c:Button("Reset Stand",function()
+    game.Players.LocalPlayer.Backpack["Rokakaka Fruit"].Parent = game.Players.LocalPlayer.Character
+	game.Players.LocalPlayer.Character:WaitForChild("Rokakaka Fruit")
+	game:GetService("ReplicatedStorage").Roka:FireServer()
+	wait(.2)
+	game.Players.LocalPlayer.PlayerGui:WaitForChild("DialogueGUI"):destroy()
+	game.Players.LocalPlayer.PlayerGui:WaitForChild("ShopGUI"):destroy()
+	game.Players.LocalPlayer.PlayerGui:WaitForChild("RokaGUI"):destroy()
+	game.Players.LocalPlayer.PlayerGui:WaitForChild("BlackMarketGUI"):destroy()
+	game.Players.LocalPlayer.PlayerGui:WaitForChild("Bank"):destroy()
+end)
+
+c:Button("Replicate Trades",function()
+    local plr = game.Players.LocalPlayer
+if not plr.Backpack:FindFirstChild("Standless") then
+    game:GetService("StarterGui"):SetCore("SendNotification", {
+                Title = "Invalid!";
+                Text  = "You need to be standless!";
+            })
+            else
+                game:GetService("StarterGui"):SetCore("SendNotification", {
+                Title = "Activated!";
+                Text  = "Replicating trades..";
+            })
+        wait(.5)
+        game:GetService("StarterGui"):SetCore("SendNotification", {
+                Title = "Click F9";
+                Text  = "Fore more info...";
+            })
+        print("Trade replicator info:")
+        print(" ")
+        print("If someone sends a trade, that trade will automatically be replicated to the person the trade was sent to and if they accept the trade the stand will go to you. Trades won't be replicated if standless isn't enabled")
+        print("Using to log info on detected trades:")
+    for i,v in pairs(game.Players:GetChildren()) do
+    v.Chatted:Connect(function(msg)
+        if msg:sub(1, 6) == ("!trade") then
+            if v.Name == tostring(plr.Name) then
+                local fire = 1 
+                else
+            local args = msg:split(" ")
+            game.Players.LocalPlayer.Backpack:WaitForChild("Standless")
+            game:GetService("StarterGui"):SetCore("SendNotification", {
+                Title = ""..v.Name.." sent a trade!";
+                Text  = "Replicating trade...";
+            })
+            for i = 1, 10 do
+                game.Players:Chat("!trade "..args[2])
+            end
+            print("Sent trade to "..args[2])
+            print("Replicated Message: !trade "..args[2])
+            end
+        end
+    end)
+end
+ end    
+end)
+
+c:Button("God Form", function()
+function getNil(name,class) for _,v in pairs(getnilinstances())do if v.ClassName==class and v.Name==name then return v;end end end
+
+	game:GetService("ReplicatedStorage").Yell:FireServer()
+	function getNil(name,class) for _,v in pairs(getnilinstances())do if v.ClassName==class and v.Name==name then return v;end end end
+	game:GetService("ReplicatedStorage").SSCharaAnims:FireServer()
+
+	function getNil(name,class) for _,v in pairs(getnilinstances())do if v.ClassName==class and v.Name==name then return v;end end end
+
+	game:GetService("ReplicatedStorage").MasteredUltraInstinct:FireServer()
+	function getNil(name,class) for _,v in pairs(getnilinstances())do if v.ClassName==class and v.Name==name then return v;end end end
+
+	game:GetService("ReplicatedStorage").Oni:FireServer()
+	function getNil(name,class) for _,v in pairs(getnilinstances())do if v.ClassName==class and v.Name==name then return v;end end end
+
+	game:GetService("ReplicatedStorage").Shadow:FireServer()
+	function getNil(name,class) for _,v in pairs(getnilinstances())do if v.ClassName==class and v.Name==name then return v;end end end
+
+	game:GetService("ReplicatedStorage").Sword:FireServer()
+	for i, v in pairs(game:GetService("ReplicatedStorage"):FindFirstChild("JotaroTools"):GetChildren()) do
+		v.Parent = game.Players.LocalPlayer.Backpack
+		function getNil(name,class) for _,v in pairs(getnilinstances())do if v.ClassName==class and v.Name==name then return v;end end end
+
+		game:GetService("ReplicatedStorage").ULF:FireServer()
+		game:GetService("ReplicatedStorage").DeltaSans:FireServer()
+		game:GetService("ReplicatedStorage").AxeKick:FireServer()
+	end
+end)
+
+c:Toggle("Auto Farm",function(bool)
+shared.toggle = bool
+if bool == true then
+wait()
+autofarm = true
+wait()
+while autofarm == true do
+		wait()
+		for _, v in pairs(game.Workspace:getChildren()) do
+			if v:IsA("Tool") then
+				if v:FindFirstChild("Handle") then
+						game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = v.Handle.CFrame
+					end
+				end
+
+			end
+		end
+		else
+		autofarm = false
+		end
+end)
+
+c:Slider("Walkspeed",{
+    min = 0; -- min value of the slider
+    max = 1000; -- max value of the slider
+    precise = true; -- max 2 decimals
+},function(value)
+    game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = value
+end)
+
+
+
+
+
+
+c:Bind("Kamehameha",Enum.KeyCode.C,function() --Default bind
+    function getNil(name,class) for _,v in pairs(getnilinstances())do if v.ClassName==class and v.Name==name then return v;end end end
+
+	game:GetService("ReplicatedStorage").tp:FireServer()
+end)
+
+
+
+c:Button("Stand Duplicate",function()
+-- Gui to Lua
+-- Version: 3.2
+
+-- Instances:
+-- Made by 0N0NYMOUS
+local ScreenGui = Instance.new("ScreenGui")
+local Main = Instance.new("Frame")
+local Title = Instance.new("TextLabel")
+local TextLabel = Instance.new("TextLabel")
+local TextBox = Instance.new("TextBox")
+local TextLabel_2 = Instance.new("TextLabel")
+local TextButton = Instance.new("TextButton")
+local TextLabel_3 = Instance.new("TextLabel")
+local Close = Instance.new("TextButton")
+local Open = Instance.new("TextButton")
+
+--Properties:
+
+ScreenGui.Parent = game.CoreGui
+ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+
+Main.Name = "Main"
+Main.Parent = ScreenGui
+Main.BackgroundColor3 = Color3.fromRGB(18, 18, 18)
+Main.Position = UDim2.new(0.385937512, 0, 0.30859375, 0)
+Main.Size = UDim2.new(0, 280, 0, 155)
+Main.Active = true
+Main.Draggable = true
+
+Title.Name = "Title"
+Title.Parent = Main
+Title.BackgroundColor3 = Color3.fromRGB(26, 26, 26)
+Title.BackgroundTransparency = 1.000
+Title.Position = UDim2.new(-0.0821428597, 0, 0, 0)
+Title.Size = UDim2.new(0, 325, 0, 44)
+Title.Font = Enum.Font.JosefinSans
+Title.Text = "Stand Duplication GUI"
+Title.TextColor3 = Color3.fromRGB(161, 161, 161)
+Title.TextSize = 22.000
+
+TextLabel.Parent = Main
+TextLabel.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+TextLabel.BackgroundTransparency = 1.000
+TextLabel.Position = UDim2.new(-0.139285728, 0, 0.167741954, 0)
+TextLabel.Size = UDim2.new(0, 200, 0, 50)
+TextLabel.Font = Enum.Font.SourceSans
+TextLabel.Text = "-- Pull Stand Out First"
+TextLabel.TextColor3 = Color3.fromRGB(172, 172, 172)
+TextLabel.TextSize = 14.000
+
+TextBox.Parent = Main
+TextBox.BackgroundColor3 = Color3.fromRGB(120, 120, 120)
+TextBox.Position = UDim2.new(0.574999988, 0, 0.49032259, 0)
+TextBox.Size = UDim2.new(0, 29, 0, 26)
+TextBox.Font = Enum.Font.SourceSans
+TextBox.Text = 1
+TextBox.TextColor3 = Color3.fromRGB(0, 0, 0)
+TextBox.TextSize = 14.000
+
+TextLabel_2.Parent = Main
+TextLabel_2.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+TextLabel_2.BackgroundTransparency = 1.000
+TextLabel_2.Position = UDim2.new(0.032142859, 0, 0.445161283, 0)
+TextLabel_2.Size = UDim2.new(0, 144, 0, 37)
+TextLabel_2.Font = Enum.Font.SourceSans
+TextLabel_2.Text = "Stand Storage Slot:"
+TextLabel_2.TextColor3 = Color3.fromRGB(172, 172, 172)
+TextLabel_2.TextSize = 20.000
+TextLabel_2.TextWrapped = true
+
+TextButton.Parent = Main
+TextButton.BackgroundColor3 = Color3.fromRGB(65, 65, 65)
+TextButton.Position = UDim2.new(0.728571415, 0, 0.812903225, 0)
+TextButton.Size = UDim2.new(0, 76, 0, 29)
+TextButton.Font = Enum.Font.SourceSansLight
+TextButton.Text = "Duplicate"
+TextButton.TextColor3 = Color3.fromRGB(0, 0, 0)
+TextButton.TextSize = 14.000
+TextButton.MouseButton1Down:Connect(function()
+
+	local function switch(a)
+		local args = {
+			[1] = a,
+			[2] = false,
+		}
+		game:GetService("ReplicatedStorage").Storage:FireServer(unpack(args))
+	end
+	
+	if TextBox.Text == "1" then
+		for i = 1, 240 do
+		switch(1)
+		wait()
+	end
+
+	while wait() do
+		switch(1)
+		local tp = game:GetService("TeleportService")
+		local plr = game:GetService("Players").LocalPlayer
+		local Id = game.PlaceId
+		tp:Teleport(Id, p)
+	end
+	else
+	if TextBox.Text == "2" then
+		for i = 1, 240 do
+			switch(2)
+			wait()
+		end
+
+		while wait() do
+			switch(2)
+			local tp = game:GetService("TeleportService")
+			local plr = game:GetService("Players").LocalPlayer
+			local Id = game.PlaceId
+			tp:Teleport(Id, p)
+			end
+		else
+			if TextBox.Text == "3" then
+				for i = 1, 240 do
+					switch(3)
+					wait()
+				end
+
+				while wait() do
+					switch(3)
+					local tp = game:GetService("TeleportService")
+					local plr = game:GetService("Players").LocalPlayer
+					local Id = game.PlaceId
+					tp:Teleport(Id, p)
+				end
+			end
+		end
+	end
+	end)
+
+TextLabel_3.Parent = Main
+TextLabel_3.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+TextLabel_3.BackgroundTransparency = 1.000
+TextLabel_3.Position = UDim2.new(0.464285702, 0, 0.400000036, 0)
+TextLabel_3.Size = UDim2.new(0, 200, 0, 50)
+TextLabel_3.Font = Enum.Font.SourceSans
+TextLabel_3.Text = "-- slots: 1, 2, 3"
+TextLabel_3.TextColor3 = Color3.fromRGB(172, 172, 172)
+TextLabel_3.TextSize = 14.000
+
+Close.Name = "Close"
+Close.Parent = Main
+Close.BackgroundColor3 = Color3.fromRGB(62, 62, 62)
+Close.Position = UDim2.new(1.05357146, 0, 0.0258064494, 0)
+Close.Size = UDim2.new(0, 35, 0, 35)
+Close.Font = Enum.Font.SourceSansSemibold
+Close.Text = "X"
+Close.TextColor3 = Color3.fromRGB(0, 0, 0)
+Close.TextSize = 22.000
+Close.MouseButton1Down:Connect(function()
+	Main.Visible = false
+	Open.Visible = true
+end)
+
+Open.Name = "Open"
+Open.Parent = ScreenGui
+Open.BackgroundColor3 = Color3.fromRGB(16, 16, 16)
+Open.Position = UDim2.new(0, 0, 0.752604187, 0)
+Open.Size = UDim2.new(0, 98, 0, 35)
+Open.Font = Enum.Font.SourceSansLight
+Open.Text = "Open"
+Open.TextColor3 = Color3.fromRGB(255, 255, 255)
+Open.TextSize = 22.000
+Open.Visible = false
+Open.MouseButton1Down:Connect(function()
+	Open.Visible = false
+	Main.Visible = true
+end)
+end)
+
+
+--[[
+How to refresh a dropdown:
+1)Create the dropdown and save it in a variable
+local yourvariable = b:Dropdown("Hi",yourtable,function(a)
+    print(a)
+end)
+2)Refresh it using the function
+yourvariable:Refresh(yourtable)
+How to refresh a label:
+1)Create your label and save it in a variable
+local yourvariable = b:Label("Pretty Useless NGL",{
+    TextSize = 25; -- Self Explaining
+    TextColor = Color3.fromRGB(255,255,255);
+    BgColor = Color3.fromRGB(69,69,69);
+})
+2)Refresh it using the function
+yourvariable:Refresh("Hello") It will only change the text ofc
+]]
